@@ -1,0 +1,18 @@
+commit 4517ee966d7dbfbf9842a4faaebeeb68844fda5b
+Author: Steven Haryanto (on PC) <stevenharyanto@gmail.com>
+Date:   Fri Jan 20 19:11:46 2012 +0700
+
+    cpan: quick patch HTTP::Daemon so it doesn't complain with 'Bad arg length for Socket::inet_ntoa, length is 16, should be 4'
+
+diff --git a/perl5/lib/perl5/HTTP/Daemon.pm b/perl5/lib/perl5/HTTP/Daemon.pm
+index cf61147..5204b4f 100644
+--- a/perl5/lib/perl5/HTTP/Daemon.pm
++++ b/perl5/lib/perl5/HTTP/Daemon.pm
+@@ -45,6 +45,7 @@ sub url
+  	$url .= lc Sys::Hostname::hostname();
+     }
+     else {
++	if (length($addr) == 16) { $addr = substr($addr, 12) }
+ 	$url .= gethostbyaddr($addr, AF_INET) || inet_ntoa($addr);
+     }
+     my $port = $self->sockport;

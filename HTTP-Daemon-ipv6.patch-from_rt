@@ -1,0 +1,11 @@
+--- HTTP/Daemon.pm~	2011-02-28 05:46:57.000000000 +0700
++++ HTTP/Daemon.pm	2012-03-12 14:34:25.585275231 +0700
+@@ -40,7 +40,7 @@
+     my $self = shift;
+     my $url = $self->_default_scheme . "://";
+     my $addr = $self->sockaddr;
+-    if (!$addr || $addr eq INADDR_ANY) {
++    if (!$addr || $addr eq INADDR_ANY || $self->isa("IO::Socket::INET6")) {
+  	require Sys::Hostname;
+  	$url .= lc Sys::Hostname::hostname();
+     }

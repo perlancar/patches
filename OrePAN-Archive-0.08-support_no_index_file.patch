@@ -1,0 +1,24 @@
+--- /home/s1/perl5/perlbrew/perls/perl-5.18.4/lib/site_perl/5.18.4/OrePAN/Archive.pm.orig	2015-05-15 18:22:09.845340606 +0700
++++ /home/s1/perl5/perlbrew/perls/perl-5.18.4/lib/site_perl/5.18.4/OrePAN/Archive.pm	2015-05-15 18:24:53.632789971 +0700
+@@ -182,6 +182,8 @@
+     my $ignore_dirs = $meta->{no_index} && $meta->{no_index}->{directory} ? $meta->{no_index}->{directory} : [];
+     my @ignore_dirs = ref $ignore_dirs ? @$ignore_dirs : [$ignore_dirs];
+     push @ignore_dirs, "t","xt", 'contrib', 'examples','inc','share','private', 'blib';
++    my $ignore_files = $meta->{no_index} && $meta->{no_index}->{file} ? $meta->{no_index}->{file} : [];
++    my @ignore_files = ref $ignore_files ? @$ignore_files : [$ignore_files];
+     infof("files");
+     my $archive = $self->archive;
+     my @files = @{$self->files()};
+@@ -191,6 +193,7 @@
+         my $quote = quotemeta($archive);
+         next if any { $file =~ m{^$quote/$_/} } @ignore_dirs;
+         next if $file !~ /\.pm(?:\.PL)?$/;
++        next if any { $file =~ m{^$quote/$_$} } @ignore_files;
+         infof("parsing: $file");
+         my ( $pkg, $ver) = _parse_version($file);
+         infof("parsed: %s version: %s", $pkg || 'unknown', $ver || 'none');
+@@ -280,4 +283,3 @@
+ }
+ 
+ 1;
+-
